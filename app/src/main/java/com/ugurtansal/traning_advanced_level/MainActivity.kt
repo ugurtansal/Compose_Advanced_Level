@@ -28,6 +28,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.ugurtansal.traning_advanced_level.ui.theme.Traning_advanced_levelTheme
 import android.Manifest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.ugurtansal.traning_advanced_level.work_manager.MyWorker
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +75,14 @@ fun Page() {
             }
         }) {
             Text("Notification Gönder")
+        }
+
+        Button(onClick = {
+            val request= OneTimeWorkRequestBuilder<MyWorker>().build()
+
+            WorkManager.getInstance(context).enqueue(request)
+        }) {
+            Text("DO")
         }
     }
 }
