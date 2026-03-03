@@ -1,4 +1,6 @@
-package com.ugurtansal.traning_advanced_level
+package com.ugurtansal.traning_advanced_level.work_manager
+
+import com.ugurtansal.traning_advanced_level.R
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -28,27 +30,25 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.ugurtansal.traning_advanced_level.ui.theme.Traning_advanced_levelTheme
 import android.Manifest
-import androidx.work.Constraints
-import androidx.work.NetworkType
 import java.util.concurrent.TimeUnit
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ugurtansal.traning_advanced_level.work_manager.MyWorker
 
-class MainActivity : ComponentActivity() {
+class MainWorkManager : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Traning_advanced_levelTheme {
-                Page()
+                WorkManagerPage()
             }
         }
     }
 }
 
 @Composable
-fun Page() {
+fun WorkManagerPage() {
     val context = LocalContext.current
 
     // Android 13+ için izin isteme mekanizması
@@ -56,7 +56,7 @@ fun Page() {
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            createNotification(context)
+            createNotificationWM(context)
         }
     }
 
@@ -73,28 +73,20 @@ fun Page() {
                         Manifest.permission.POST_NOTIFICATIONS
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
-                    createNotification(context)
+                    createNotificationWM(context)
                 } else {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             } else {
-                createNotification(context)
+                createNotificationWM(context)
             }
         }) {
             Text("Notification Gönder")
         }
 
         Button(onClick = {
-
-            val contsraintState =
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED) //İnternet koşulu varsa
-                    .build()
-
-
             val request = OneTimeWorkRequestBuilder<MyWorker>()
                 .setInitialDelay(10, TimeUnit.SECONDS)
-                .setConstraints(contsraintState)
                 .build()
 
             WorkManager.getInstance(context).enqueue(request)
@@ -104,7 +96,7 @@ fun Page() {
     }
 }
 
-fun createNotification(context: Context) {
+fun createNotificationWM(context: Context) {
     val notifiAdmin = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val channelId = "my_channel_id" // Sabit bir ID kullan
 

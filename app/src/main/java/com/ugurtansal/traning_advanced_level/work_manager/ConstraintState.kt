@@ -1,4 +1,6 @@
-package com.ugurtansal.traning_advanced_level
+package com.ugurtansal.traning_advanced_level.work_manager
+
+import com.ugurtansal.traning_advanced_level.R
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -35,7 +37,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ugurtansal.traning_advanced_level.work_manager.MyWorker
 
-class MainActivity : ComponentActivity() {
+class MainConstraint : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -85,7 +87,6 @@ fun Page() {
         }
 
         Button(onClick = {
-
             val contsraintState =
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED) //İnternet koşulu varsa
@@ -96,6 +97,7 @@ fun Page() {
                 .setInitialDelay(10, TimeUnit.SECONDS)
                 .setConstraints(contsraintState)
                 .build()
+
 
             WorkManager.getInstance(context).enqueue(request)
         }) {
