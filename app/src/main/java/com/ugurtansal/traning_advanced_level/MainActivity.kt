@@ -28,6 +28,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.ugurtansal.traning_advanced_level.ui.theme.Traning_advanced_levelTheme
 import android.Manifest
+import java.util.concurrent.TimeUnit
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ugurtansal.traning_advanced_level.work_manager.MyWorker
@@ -65,7 +66,11 @@ fun Page() {
         Button(onClick = {
             // İzin kontrolü (Android 13 ve sonrası için)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
                     createNotification(context)
                 } else {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -78,7 +83,9 @@ fun Page() {
         }
 
         Button(onClick = {
-            val request= OneTimeWorkRequestBuilder<MyWorker>().build()
+            val request = OneTimeWorkRequestBuilder<MyWorker>()
+                .setInitialDelay(10, TimeUnit.SECONDS)
+                .build()
 
             WorkManager.getInstance(context).enqueue(request)
         }) {
